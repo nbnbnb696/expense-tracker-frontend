@@ -1,46 +1,127 @@
-# Getting Started with Create React App
+# Expense Tracker Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based expense tracking application built with TypeScript that helps users manage their income and expenses efficiently.
+
+## Features
+
+- **Dashboard Overview**: View total income, expenses, and current balance at a glance
+- **Transaction Management**: Add, view, and delete income/expense transactions
+- **User Authentication**: Login and registration functionality (components ready)
+- **Real-time Calculations**: Automatic balance calculation based on transactions
+- **Responsive UI**: Clean and intuitive interface with color-coded transaction types
+
+## Tech Stack
+
+- **React** 19.2.4 - UI library
+- **TypeScript** 4.9.5 - Type-safe JavaScript
+- **React Router DOM** 7.13.0 - Client-side routing
+- **Axios** 1.13.4 - HTTP client for API calls
+- **React Scripts** 5.0.1 - Build tooling
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn
+- Backend API running on `http://localhost:8080`
+
+## Installation
+
+1. Clone the repository
+2. Navigate to the project directory:
+```bash
+cd expense-tracker-frontend
+```
+
+3. Install dependencies:
+```bash
+npm install
+```
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000)
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Builds the app for production to the `build` folder
 
 ### `npm run eject`
+Ejects from Create React App (one-way operation)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Project Structure
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+src/
+├── components/
+│   ├── Dashboard.tsx      # Main dashboard with transaction management
+│   ├── Login.tsx          # User login component
+│   └── Register.tsx       # User registration component
+├── services/
+│   └── api.ts            # API service layer with Axios
+├── App.tsx               # Main application component
+├── App.css               # Application styles
+└── index.tsx             # Application entry point
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## API Integration
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The application connects to a backend API at `http://localhost:8080/api` with the following endpoints:
 
-## Learn More
+### Authentication
+- `POST /auth/login` - User login
+- `POST /auth/register` - User registration
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Transactions
+- `GET /transactions` - Fetch all transactions
+- `POST /transactions` - Create new transaction
+- `PUT /transactions/:id` - Update transaction
+- `DELETE /transactions/:id` - Delete transaction
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
+
+1. Start the backend API server (ensure it's running on port 8080)
+2. Run `npm start` to launch the frontend
+3. Add transactions using the "Add Transaction" button
+4. View your financial summary in the dashboard cards
+5. Delete transactions as needed
+
+## Transaction Types
+
+- **INCOME**: Positive transactions (displayed in green)
+- **EXPENSE**: Negative transactions (displayed in red)
+
+## Development
+
+The application uses:
+- React Hooks (useState, useEffect) for state management
+- TypeScript interfaces for type safety
+- Axios interceptors for API communication
+- Inline styling for component presentation
+
+## Testing
+
+Testing libraries included:
+- @testing-library/react
+- @testing-library/jest-dom
+- @testing-library/user-event
+
+Run tests with `npm test`
+
+## Browser Support
+
+Production builds support:
+- >0.2% market share
+- Not dead browsers
+- Not Opera Mini
+
+Development builds support latest versions of:
+- Chrome
+- Firefox
+- Safari
+
+## License
+
+Private project for Deloitte training purposes
