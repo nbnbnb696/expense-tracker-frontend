@@ -1,0 +1,15 @@
+namespace: dev
+
+replicaCount: 1
+
+image:
+  repository: somanathmuduli03/expensetracker-frontend
+  tag: "1.1-dev"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+
+ingress:
+  host: app-dev.afet.online
+  tlsSecretName: dev-app-afet-tls

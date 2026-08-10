@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { transactionAPI, Transaction, TransactionRequest } from '../services/api';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  onLogout: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<TransactionRequest>({
@@ -11,6 +15,7 @@ const Dashboard: React.FC = () => {
     date: new Date().toISOString().split('T')[0],
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     loadTransactions();
@@ -20,14 +25,15 @@ const Dashboard: React.FC = () => {
     try {
       const response = await transactionAPI.getAll();
       setTransactions(response.data);
-    } catch (error) {
-      console.error('Failed to load transactions:', error);
+    } catch (err) {
+      setError('Failed to load transactions. Please try again.');
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       await transactionAPI.create(formData);
@@ -39,8 +45,8 @@ const Dashboard: React.FC = () => {
       });
       setShowForm(false);
       loadTransactions();
-    } catch (error) {
-      console.error('Failed to create transaction:', error);
+    } catch (err) {
+      setError('Failed to create transaction. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -51,10 +57,15 @@ const Dashboard: React.FC = () => {
       try {
         await transactionAPI.delete(id);
         loadTransactions();
-      } catch (error) {
-        console.error('Failed to delete transaction:', error);
+      } catch (err) {
+        setError('Failed to delete transaction. Please try again.');
       }
     }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('token');
+    onLogout();
   };
 
   const totalIncome = transactions
@@ -71,7 +82,19 @@ const Dashboard: React.FC = () => {
     <div style={{ maxWidth: '800px', margin: '20px auto', padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
         <h1>Expense Tracker</h1>
+        <button
+          onClick={handleLogout}
+          style={{ padding: '8px 16px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Logout
+        </button>
       </div>
+
+      {error && (
+        <div style={{ color: 'red', backgroundColor: '#ffe8e8', padding: '10px', borderRadius: '4px', marginBottom: '20px' }}>
+          {error}
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '30px' }}>
         <div style={{ padding: '20px', backgroundColor: '#e8f5e8', borderRadius: '8px', textAlign: 'center' }}>
@@ -93,14 +116,7 @@ const Dashboard: React.FC = () => {
       <div style={{ marginBottom: '20px' }}>
         <button
           onClick={() => setShowForm(!showForm)}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-          }}
+          style={{ padding: '12px 24px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
           {showForm ? 'Cancel' : 'Add Transaction'}
         </button>
@@ -146,14 +162,7 @@ const Dashboard: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
+            style={{ padding: '12px 24px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
           >
             {loading ? 'Adding...' : 'Add Transaction'}
           </button>
@@ -169,39 +178,19 @@ const Dashboard: React.FC = () => {
             {transactions.map((transaction) => (
               <div
                 key={transaction.id}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '15px 20px',
-                  borderBottom: '1px solid #eee',
-                }}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 20px', borderBottom: '1px solid #eee' }}
               >
                 <div>
                   <h4 style={{ margin: '0 0 5px 0' }}>{transaction.description}</h4>
                   <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{transaction.date}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <span
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: 'bold',
-                      color: transaction.type === 'INCOME' ? '#28a745' : '#dc3545',
-                    }}
-                  >
+                  <span style={{ fontSize: '18px', fontWeight: 'bold', color: transaction.type === 'INCOME' ? '#28a745' : '#dc3545' }}>
                     {transaction.type === 'INCOME' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
                   </span>
                   <button
                     onClick={() => handleDelete(transaction.id)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                    }}
+                    style={{ padding: '5px 10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
                   >
                     Delete
                   </button>

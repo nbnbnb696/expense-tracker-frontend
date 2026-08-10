@@ -1,0 +1,15 @@
+namespace: qa
+
+replicaCount: 1
+
+image:
+  repository: somanathmuduli03/expensetracker-frontend
+  tag: "1.1-qa"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+
+ingress:
+  host: app-qa.afet.online
+  tlsSecretName: qa-app-afet-tls

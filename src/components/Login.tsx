@@ -22,7 +22,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
     try {
       const response = await authAPI.login(formData);
       const token = response.data.token;
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
       onLogin(token);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');

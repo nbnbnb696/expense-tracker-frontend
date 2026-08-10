@@ -1,0 +1,15 @@
+namespace: prod
+
+replicaCount: 2
+
+image:
+  repository: somanathmuduli03/expensetracker-frontend
+  tag: "1.1-prod"
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+
+ingress:
+  host: app.afet.online
+  tlsSecretName: app-afet-tls
