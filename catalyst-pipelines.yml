@@ -1,0 +1,14 @@
+version: 1.0
+jobs:
+  install:
+    steps:
+      - npm install
+  build:
+    steps:
+      - npm run build
+
+stages:
+  - name: build
+    jobs:
+      - - install
+        - build
